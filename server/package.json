@@ -7,15 +7,22 @@
     "build": "tsup",
     "start": "node dist/server.js",
     "start:dev": "tsx --watch src/server.ts",
-    "lint": "eslint \"{src,test}/**/*.ts\" --fix",
-    "test": "jest --detectOpenHandles"
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "test": "jest --detectOpenHandles",
+    "lint": "eslint \"{src,test}/**/*.ts\" --fix"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "pg": "^8.13.1",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
     "@eslint/js": "^9.16.0",
+    "@types/cors": "^2.8.17",
     "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
