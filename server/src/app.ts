@@ -1,9 +1,31 @@
+import 'reflect-metadata';
+
 import express, { Application, NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
+
+import { dataSource } from '@/config/typeorm.config';
 
 dotenv.config();
 
+dataSource
+  .initialize()
+  .then(() => {
+    console.log('Data Source has been initialized!');
+  })
+  .catch((err) => {
+    console.error('Error during Data Source initialization:', err);
+  });
+
 const app: Application = express();
+const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
+  }),
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

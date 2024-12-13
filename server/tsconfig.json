@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "lib": ["ES6"],
     "module": "node16",
     "target": "es2022",
 
@@ -12,6 +13,10 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+
+    "strictPropertyInitialization": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   }
 }
