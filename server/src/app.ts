@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 
 import { dataSource } from '@/config/typeorm.config';
+import router from '@/routes';
 
 dotenv.config();
 
@@ -33,6 +34,8 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (_req: Request, res: Response) => {
   res.send('Hello World!');
 });
+
+app.use('/api', router);
 
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err.stack);
