@@ -2,20 +2,20 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column('varchar')
-  name: string;
+  username: string;
 
   @Column('varchar')
-  githubLink: string;
+  githubUser: string;
 
   @Column('varchar')
   email: string;
 
   @Column('varchar')
-  password: string;
+  passwordHash: string;
 
   @Column('date')
   updatedAt: string;
