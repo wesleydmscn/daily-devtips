@@ -11,6 +11,19 @@ export const dataSource = new DataSource({
 
   entities: ['src/entity/**/*.ts'],
 
-  logging: true,
+  logging: ['development', 'production'].includes(
+    process.env.ENVIRONMENT ?? '',
+  ),
+
   synchronize: true,
 });
+
+export const initializeDatabase = async () => {
+  try {
+    await dataSource.initialize();
+    console.log('Data Source has been initialized!');
+  } catch (err) {
+    console.error('Error during Data Source initialization:', err);
+    throw new Error('Database initialization failed');
+  }
+};

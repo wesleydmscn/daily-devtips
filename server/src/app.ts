@@ -4,19 +4,9 @@ import express, { Application, NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
-import { dataSource } from '@/config/typeorm.config';
 import router from '@/routes';
 
 dotenv.config();
-
-dataSource
-  .initialize()
-  .then(() => {
-    console.log('Data Source has been initialized!');
-  })
-  .catch((err) => {
-    console.error('Error during Data Source initialization:', err);
-  });
 
 const app: Application = express();
 const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [];
