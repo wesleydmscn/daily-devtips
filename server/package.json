@@ -9,7 +9,8 @@
     "start:dev": "tsx --watch src/server.ts",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
-    "test": "jest --detectOpenHandles",
+    "test:dev": "jest --detectOpenHandles",
+    "test:ci": "jest",
     "lint": "eslint \"{src,test}/**/*.ts\" --fix"
   },
   "dependencies": {
