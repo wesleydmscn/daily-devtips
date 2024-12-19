@@ -1,5 +1,7 @@
 import { DataSource } from 'typeorm';
 
+import { User } from '@/entities/user.entity';
+
 export const dataSource = new DataSource({
   type: 'postgres',
 
@@ -9,7 +11,7 @@ export const dataSource = new DataSource({
   password: process.env.DATABASE_PASSWORD ?? 'dev',
   database: process.env.DATABASE_NAME ?? 'postgres',
 
-  entities: ['src/entity/**/*.ts'],
+  entities: [User],
 
   logging: ['development', 'production'].includes(
     process.env.ENVIRONMENT ?? '',

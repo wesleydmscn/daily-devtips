@@ -1,4 +1,4 @@
-name: Integration API tests
+name: API tests
 
 on:
   pull_request:
@@ -9,6 +9,21 @@ on:
 jobs:
   server:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: test_dev
+          POSTGRES_PASSWORD: test_dev
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout code
@@ -24,8 +39,16 @@ jobs:
 
       - name: Install dependencies with pnpm
         working-directory: ./server
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
-      - name: Run tests
+      - name: Run integration tests
         working-directory: ./server
+
+        env:
+          DATABASE_HOST: localhost
+          DATABASE_PORT: 5432
+          DATABASE_USERNAME: test_dev
+          DATABASE_PASSWORD: test_dev
+          DATABASE_NAME: postgres
+
         run: pnpm test:integration
