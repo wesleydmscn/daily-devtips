@@ -1,0 +1,14 @@
+services:
+  daily-devtips-postgres-test:
+    image: bitnami/postgresql:latest
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres_data_test:/bitnami/postgresql
+
+volumes:
+  postgres_data_test:
