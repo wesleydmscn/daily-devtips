@@ -1,5 +1,15 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
+export class LoginUserBodyDTO {
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  password: string;
+}
+
 export class CreateUserBodyDTO {
   @IsNotEmpty()
   @IsString()
