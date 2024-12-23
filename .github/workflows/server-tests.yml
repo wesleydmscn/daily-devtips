@@ -45,6 +45,8 @@ jobs:
         working-directory: ./server
 
         env:
+          JWT_SECRET: test_secret
+
           DATABASE_HOST: localhost
           DATABASE_PORT: 5432
           DATABASE_USERNAME: test_dev

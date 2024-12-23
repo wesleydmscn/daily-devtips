@@ -1,8 +1,9 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
+import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 
 import { IUserRepository } from './user.repository';
-import { CreateUserBodyDTO } from './user.dtos';
+import { CreateUserBodyDTO, LoginUserBodyDTO } from './user.dtos';
 import { DefaultUserViewModel } from './user.view-models';
 
 import { BadRequestError } from '../errors';
@@ -10,7 +11,31 @@ import { BadRequestError } from '../errors';
 export class UserController {
   constructor(private readonly userRepository: IUserRepository) {}
 
-  async createUser(req: Request, res: Response) {
+  async login(req: Request, res: Response, next: NextFunction) {
+    const { email, password }: LoginUserBodyDTO = req.body;
+
+    try {
+      const user = await this.userRepository.findOneByEmail(email);
+
+      if (!user) {
+        throw new BadRequestError('User not found');
+      }
+
+      const passwordMatch = await bcrypt.compare(password, user.passwordHash);
+
+      if (!passwordMatch) {
+        throw new BadRequestError('Invalid email or password');
+      }
+
+      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET ?? '');
+
+      res.json({ accessToken: token });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async create(req: Request, res: Response, next: NextFunction) {
     const { username, githubUser, email, password }: CreateUserBodyDTO =
       req.body;
 
@@ -33,12 +58,7 @@ export class UserController {
 
       res.json(DefaultUserViewModel.toHTTP(user));
     } catch (error) {
-      if (error instanceof BadRequestError) {
-        res.status(400).json({ message: error.message });
-        return;
-      }
-
-      res.status(500).json({ message: 'Internal server error' });
+      next(error);
     }
   }
 }
