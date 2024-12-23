@@ -15,8 +15,16 @@ export class UserController {
       req.body;
 
     try {
+      const userExists =
+        (await this.userRepository.findOneByUsername(username)) ||
+        (await this.userRepository.findOneByEmail(email));
+
+      if (userExists) {
+        throw new BadRequestError('User already exists');
+      }
+
       const passwordHash = await bcrypt.hash(password, 10);
-      const user = await this.userRepository.createUser({
+      const user = await this.userRepository.create({
         username,
         githubUser,
         email,
