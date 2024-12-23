@@ -2,12 +2,11 @@ import { Repository } from 'typeorm/browser';
 
 import { dataSource } from '@/config/typeorm.config';
 import { User } from '@/entities/user.entity';
-import { BadRequestError } from '../errors';
 
 export interface IUserRepository {
-  createUser(user: User): Promise<User>;
-  getUserByUsername(username: string): Promise<User | null>;
-  getUserByEmail(email: string): Promise<User | null>;
+  create(user: User): Promise<User>;
+  findOneByUsername(username: string): Promise<User | null>;
+  findOneByEmail(email: string): Promise<User | null>;
 }
 
 export class UserRepository implements UserRepository {
@@ -17,28 +16,20 @@ export class UserRepository implements UserRepository {
     this.database = dataSource.getRepository(User);
   }
 
-  async createUser(user: User): Promise<User> {
-    const userExists =
-      (await this.getUserByUsername(user.username)) ||
-      (await this.getUserByEmail(user.email));
-
-    if (userExists) {
-      throw new BadRequestError('User already exists');
-    }
-
+  async create(user: User): Promise<User> {
     const createdUser = this.database.create(user);
     return await this.database.save(createdUser);
   }
 
-  async getUserByUsername(username: string): Promise<User | null> {
-    return await this.getUserByField('username', username);
+  async findOneByUsername(username: string): Promise<User | null> {
+    return await this.findOneByField('username', username);
   }
 
-  async getUserByEmail(email: string): Promise<User | null> {
-    return await this.getUserByField('email', email);
+  async findOneByEmail(email: string): Promise<User | null> {
+    return await this.findOneByField('email', email);
   }
 
-  private async getUserByField(
+  private async findOneByField(
     field: keyof User,
     value: string,
   ): Promise<User | null> {
